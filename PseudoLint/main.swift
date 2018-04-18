@@ -9,7 +9,7 @@
 import Foundation
 
 func help() {
-    print("usage: psl file")
+    print("usage: psl file [outfile]")
     print("       psl directory")
     print("Files are saved to psl/")
     print("No arguments starts testing REPL instead")
@@ -54,20 +54,29 @@ func processDirectory(at path: String) {
 
 func main() {
     if CommandLine.arguments.count < 2 {
-        print("PseudoLint REPL")
-        //help()
-        repl() // for testing
+        help()
+        print("\nStarting PseudoLint REPL (Ctrl+C to exit)")
+        repl()
     } else {
         let path = CommandLine.arguments[1].madeAbsolute
         var isDirectory: ObjCBool = false
         if FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory) {
             if isDirectory.boolValue {
+                // Process directory
                 processDirectory(at: path)
             } else {
+                // Process file
                 let filename = path.lastPathComponent
-                let folder = path.deletingLastPathComponent +/ "psl"
-                FileManager.default.createDirectory(atPath: folder)
-                processFile(at: path, saveAs: folder +/ filename)
+                if CommandLine.arguments.count > 2 {
+                    // Save as file named <arg2>
+                    let outFile = CommandLine.arguments[2]
+                    processFile(at: path, saveAs: outFile)
+                } else {
+                    // Save to psl/
+                    let folder = path.deletingLastPathComponent +/ "psl"
+                    FileManager.default.createDirectory(atPath: folder)
+                    processFile(at: path, saveAs: folder +/ filename)
+                }
             }
         } else {
             print("Invalid path")
