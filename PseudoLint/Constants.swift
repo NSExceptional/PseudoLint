@@ -19,7 +19,7 @@ struct Expression {
     static let autorelease = ("\\n\\s+objc_retainAutorelease.+", "")
     static let release = ("objc_release\\((\\w+)\\);", "// [$1 release];")
     static let singletons = ("\\+(\\[[\\w\\d]+ [\\w\\d]+\\])\\(.+\\);", "$1;")
-    static let singleArgClassMethods = ("\\[([\\w\\d]+ [\\w\\d]+:)\\]\\((.+)\\);", "[$1$2];")
+    static let singleArgClassMethods = ("\\[([\\w\\d]+ [\\w\\d]+:)\\]\\([^,]+, [^,]+, (.+)\\);", "[$1$2];")
     static let dictionarySubscript = ("\\[([\\w\\d]+) objectForKeyedSubscript:(.+)\\]", "$1[key: $2]")
     static let arraySubscript = ("\\[([\\w\\d]+) objectAtIndexedSubscript:(.+)\\]", "$1[idx: $2]")
     static let autoreleaseReturn = ("\\(id\\)objc_autoreleaseReturnValue\\((.+)\\);", "$1;")
