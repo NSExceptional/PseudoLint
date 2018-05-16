@@ -22,6 +22,8 @@ struct Expression {
     static let release = ("objc_release\\((\\w+)\\);", "// [$1 release];")
     static let autoreleaseReturn = ("\\(id\\)objc_autoreleaseReturnValue\\(([^,\\n]+)\\);", "$1;")
     static let singletons = ("\\+(\\[([\\w\\d]+) ([\\w\\d]+)\\])\\(\\2, \\\"\\3\\\"\\);", "$1;")
+    static let tripleAssignments = ("( +)([\\w\\d]+) = ([^;]+);( // [-+]\\[[^]]+\\])?\\s+([\\w\\d]+) = \\2;\\s+([\\w\\d]+) = \\4;", "$1$2 = $5 = $6 = $3;$4")
+    static let doubleAssignments = ("( +)([\\w\\d]+) = ([^;]+);( // [-+]\\[[^]]+\\])?\\s+([\\w\\d]+) = \\2;", "$1$2 = $5 = $3;$4")
 
     // MARK: complex, "hard-coded" linting, such as converting +[Class method:](arg) to [Class method:arg]
     // The _l means "long," ie where IDA chooses to prefix calls with - or +
@@ -43,6 +45,7 @@ struct Expression {
         instanceMethods_l, classMethods_l, singleArgInstanceMethods_l,
         singleArgClassMethods_l, singleArgMethods,
 
-        singletons, dictionarySubscript, arraySubscript, frameLiteralsInMethods
+        singletons, dictionarySubscript, arraySubscript, frameLiteralsInMethods,
+        tripleAssignments, doubleAssignments
     ]
 }
